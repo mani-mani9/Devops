@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8085:80"              # Expose Apache to localhost:8080
+    depends_on:
+      - db
+    volumes:
+      - .:/var/www/html        # Optional for live dev
+    networks:
+      - appnet
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: loginapp
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"
+    networks:
+      - appnet
+
+networks:
+  appnet:
+
+volumes:
+  dbdata:
+
